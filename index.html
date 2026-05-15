@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Spark | Motivation Generator</title>
     
-    <!-- External Resources -->
+    <!-- Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         * {
@@ -44,14 +43,6 @@
             50% { text-shadow: 0 0 20px #e94560, 0 0 30px #ff2e63; opacity: 0.7; }
         }
 
-        /* Capture කරන්න ඕන කොටස */
-        #capture-area {
-            padding: 20px;
-            background: transparent;
-            display: flex;
-            justify-content: center;
-        }
-
         .quote-box {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -60,8 +51,9 @@
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             text-align: center;
-            width: 100%;
+            width: 90%;
             max-width: 450px;
+            transition: 0.3s;
         }
 
         .quote-icon {
@@ -76,6 +68,7 @@
             line-height: 1.4;
             margin-bottom: 15px;
             min-height: 80px;
+            transition: 0.3s;
         }
 
         #author {
@@ -90,11 +83,12 @@
             gap: 10px;
             margin-top: 25px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         button {
             border: none;
-            padding: 12px 20px;
+            padding: 12px 22px;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.3s;
@@ -104,21 +98,42 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .btn-next {
-            background: #e94560;
             color: white;
         }
 
-        .btn-download {
-            background: #28a745;
-            color: white;
-        }
+        .btn-next { background: #e94560; }
+        .btn-copy { background: #3b5998; }
 
         button:hover {
             transform: scale(1.05);
             filter: brightness(1.2);
+        }
+
+        /* Copy කළාම පෙන්වන පුංචි පණිවිඩය */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            font-size: 14px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadeInOut 2s;
+        }
+
+        @keyframes fadeInOut {
+            0% { bottom: 0; opacity: 0; }
+            20% { bottom: 30px; opacity: 1; }
+            80% { bottom: 30px; opacity: 1; }
+            100% { bottom: 0; opacity: 0; }
         }
     </style>
 </head>
@@ -126,61 +141,66 @@
 
     <h1 class="main-title">Daily Spark</h1>
 
-    <div id="capture-area">
-        <div class="quote-box">
-            <i class="fas fa-quote-left quote-icon"></i>
-            <div class="text-area">
-                <p id="quote">"සාර්ථකත්වයේ රහස වන්නේ අරමුණක් ඇතිව වැඩ කිරීමයි."</p>
-                <span id="author">- සසංකර</span>
-            </div>
+    <div class="quote-box">
+        <i class="fas fa-quote-left quote-icon"></i>
+        <div class="text-area">
+            <p id="quote">"සාර්ථකත්වයේ රහස වන්නේ අරමුණක් ඇතිව වැඩ කිරීමයි."</p>
+            <span id="author">- සසංකර</span>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-next" id="new-quote">
+                <i class="fas fa-sync-alt"></i> තව එකක්
+            </button>
+            <button class="btn-copy" id="copy-btn">
+                <i class="fas fa-copy"></i> Copy Text
+            </button>
         </div>
     </div>
 
-    <div class="button-group">
-        <button class="btn-next" id="new-quote">
-            <i class="fas fa-sync-alt"></i> තව එකක්
-        </button>
-        <button class="btn-download" id="download-btn">
-            <i class="fas fa-download"></i> Save Image
-        </button>
-    </div>
+    <!-- Copy වූ බව පෙන්වන Alert එක -->
+    <div id="toast">Quote එක Copy කළා! ✅</div>
 
     <script>
         const quotes = [
             { text: "සාර්ථකත්වය යනු වැටෙන වාරයක් පාසා නැවත නැගී සිටීමයි.", author: "වින්ස්ටන් චර්චිල්" },
             { text: "ඔබේ සිහිනය වෙනුවෙන් අද දවසේ යමක් කරන්න.", author: "ස්ටීව් ජොබ්ස්" },
             { text: "අසීරු මාවත් සැමවිටම සුන්දර ගමනාන්ත කරා ඔබව රැගෙන යයි.", author: "සිග් සිග්ලර්" },
-            { text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.", author: "අල්බර්ට් අයින්ස්ටයින්" }
+            { text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.", author: "අල්බර්ට් අයින්ස්ටයින්" },
+            { text: "ජයග්‍රහණය යනු පැරදීමට බිය නොවීමයි.", author: "මෝටිවේෂන් සිංහල" }
         ];
 
         const quoteText = document.getElementById("quote");
         const authorText = document.getElementById("author");
         const btnNext = document.getElementById("new-quote");
-        const btnDownload = document.getElementById("download-btn");
+        const btnCopy = document.getElementById("copy-btn");
+        const toast = document.getElementById("toast");
 
-        // නිව් Quote එකක් ගැනීම
+        // නව Quote එකක් ගැනීම
         btnNext.addEventListener("click", () => {
             const randomIndex = Math.floor(Math.random() * quotes.length);
             quoteText.style.opacity = 0;
+            authorText.style.opacity = 0;
+            
             setTimeout(() => {
                 quoteText.innerText = `"${quotes[randomIndex].text}"`;
                 authorText.innerText = `- ${quotes[randomIndex].author}`;
                 quoteText.style.opacity = 1;
+                authorText.style.opacity = 1;
             }, 300);
         });
 
-        // Screenshot එකක් ලෙස Download කිරීම
-        btnDownload.addEventListener("click", () => {
-            const element = document.getElementById("capture-area");
+        // Copy කිරීමේ පහසුකම
+        btnCopy.addEventListener("click", () => {
+            const fullText = `${quoteText.innerText} ${authorText.innerText}`;
             
-            html2canvas(element, {
-                backgroundColor: null, // Transparent background
-                scale: 2 // Quality එක වැඩි කිරීමට
-            }).then(canvas => {
-                const link = document.createElement("a");
-                link.download = "motivation-quote.png";
-                link.href = canvas.toDataURL("image/png");
-                link.click();
+            // Clipboard එකට copy කිරීම
+            navigator.clipboard.writeText(fullText).then(() => {
+                // Toast එක පෙන්වීම
+                toast.className = "show";
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+            }).catch(err => {
+                console.error('Copy කරන්න බැරි වුණා: ', err);
             });
         });
     </script>
