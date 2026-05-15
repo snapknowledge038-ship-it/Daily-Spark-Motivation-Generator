@@ -22,13 +22,40 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #0b0d17; /* තද අඳුරු පැහැය */
             color: #fff;
             overflow: hidden;
+            position: relative;
         }
 
+        /* --- Stars Animation Styles --- */
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Content එකට පිටුපසින් තැබීමට */
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+
+        /* තරු නිර්මාණය (CSS Box Shadows පාවිච්චි කරලා) */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: animateStar linear infinite;
+        }
+
+        @keyframes animateStar {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-1000px); } /* ඉහළට ගමන් කිරීම */
+        }
+
+        /* --- Content Styles --- */
         .main-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 20px;
             text-transform: uppercase;
@@ -39,105 +66,108 @@
         }
 
         @keyframes glow {
-            0%, 100% { text-shadow: 0 0 5px #e94560, 0 0 10px #e94560; opacity: 1; }
-            50% { text-shadow: 0 0 20px #e94560, 0 0 30px #ff2e63; opacity: 0.7; }
+            0%, 100% { text-shadow: 0 0 10px #e94560, 0 0 20px #e94560; opacity: 1; }
+            50% { text-shadow: 0 0 30px #e94560, 0 0 40px #ff2e63; opacity: 0.8; }
         }
 
         .quote-box {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            padding: 45px;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             text-align: center;
             width: 90%;
-            max-width: 450px;
-            transition: 0.3s;
+            max-width: 480px;
+            z-index: 10;
         }
 
         .quote-icon {
             font-size: 35px;
             color: #e94560;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         #quote {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 500;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            min-height: 80px;
-            transition: 0.3s;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            min-height: 90px;
+            transition: 0.4s;
         }
 
         #author {
             display: block;
             font-style: italic;
             color: #e94560;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 30px;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         button {
             border: none;
-            padding: 12px 22px;
+            padding: 14px 24px;
             border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s ease;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .btn-next { background: #e94560; }
-        .btn-copy { background: #3b5998; }
+        .btn-copy { background: #1f4068; }
 
         button:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px) scale(1.05);
             filter: brightness(1.2);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
         }
 
-        /* Copy කළාම පෙන්වන පුංචි පණිවිඩය */
         #toast {
             visibility: hidden;
-            min-width: 200px;
             background-color: #28a745;
             color: #fff;
             text-align: center;
             border-radius: 50px;
-            padding: 10px;
+            padding: 12px 25px;
             position: fixed;
-            z-index: 1;
             bottom: 30px;
             font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         #toast.show {
             visibility: visible;
-            animation: fadeInOut 2s;
+            animation: fadeInOut 2.5s;
         }
 
         @keyframes fadeInOut {
-            0% { bottom: 0; opacity: 0; }
-            20% { bottom: 30px; opacity: 1; }
-            80% { bottom: 30px; opacity: 1; }
-            100% { bottom: 0; opacity: 0; }
+            0% { opacity: 0; bottom: 0; }
+            20% { opacity: 1; bottom: 30px; }
+            80% { opacity: 1; bottom: 30px; }
+            100% { opacity: 0; bottom: 0; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Background Stars -->
+    <div class="stars-container" id="stars"></div>
 
     <h1 class="main-title">Daily Spark</h1>
 
@@ -158,10 +188,40 @@
         </div>
     </div>
 
-    <!-- Copy වූ බව පෙන්වන Alert එක -->
     <div id="toast">Quote එක Copy කළා! ✅</div>
 
     <script>
+        // --- තරු නිර්මාණය කිරීමේ Logic එක ---
+        function createStars() {
+            const container = document.getElementById('stars');
+            const starCount = 150; // තරු ගණන
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random ප්‍රමාණය (1px - 3px)
+                const size = Math.random() * 3 + 'px';
+                star.style.width = size;
+                star.style.height = size;
+                
+                // Random පිහිටීම
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                
+                // Random Animation වේගය
+                const duration = Math.random() * 50 + 50 + 's';
+                star.style.animationDuration = duration;
+                
+                // Random Delay එකක් (එක පාර ඔක්කොම යන්නේ නැති වෙන්න)
+                star.style.animationDelay = Math.random() * -100 + 's';
+
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        // --- Quotes Logic ---
         const quotes = [
             { text: "සාර්ථකත්වය යනු වැටෙන වාරයක් පාසා නැවත නැගී සිටීමයි.", author: "වින්ස්ටන් චර්චිල්" },
             { text: "ඔබේ සිහිනය වෙනුවෙන් අද දවසේ යමක් කරන්න.", author: "ස්ටීව් ජොබ්ස්" },
@@ -176,7 +236,6 @@
         const btnCopy = document.getElementById("copy-btn");
         const toast = document.getElementById("toast");
 
-        // නව Quote එකක් ගැනීම
         btnNext.addEventListener("click", () => {
             const randomIndex = Math.floor(Math.random() * quotes.length);
             quoteText.style.opacity = 0;
@@ -190,17 +249,11 @@
             }, 300);
         });
 
-        // Copy කිරීමේ පහසුකම
         btnCopy.addEventListener("click", () => {
             const fullText = `${quoteText.innerText} ${authorText.innerText}`;
-            
-            // Clipboard එකට copy කිරීම
             navigator.clipboard.writeText(fullText).then(() => {
-                // Toast එක පෙන්වීම
                 toast.className = "show";
-                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
-            }).catch(err => {
-                console.error('Copy කරන්න බැරි වුණා: ', err);
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
             });
         });
     </script>
