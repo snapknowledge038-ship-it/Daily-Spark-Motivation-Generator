@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* CSS කොටස මෙතන තියෙන්නේ */
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +19,7 @@
         body {
             height: 100vh;
             display: flex;
+            flex-direction: column; /* Title එක උඩින් තියන්න */
             align-items: center;
             justify-content: center;
             background: radial-gradient(circle, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -27,24 +27,54 @@
             overflow: hidden;
         }
 
+        /* නිවි නිවි පත්තුවෙන Title එක */
+        .main-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 10px #e94560;
+            animation: glow 2s ease-in-out infinite; /* Animation එක මෙතන */
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 5px #e94560, 0 0 10px #e94560, 0 0 20px #e94560;
+                opacity: 1;
+            }
+            50% {
+                text-shadow: 0 0 20px #e94560, 0 0 30px #ff2e63, 0 0 40px #ff2e63;
+                opacity: 0.7;
+            }
+        }
+
         .container {
             width: 90%;
             max-width: 500px;
+            animation: fadeIn 1.5s ease-out; /* මුලින්ම පේජ් එක එනකොට එන animation */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .quote-box {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .quote-box:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
         }
 
         .quote-icon {
@@ -60,7 +90,7 @@
             line-height: 1.4;
             margin-bottom: 15px;
             min-height: 100px;
-            transition: opacity 0.5s ease;
+            transition: all 0.5s ease;
         }
 
         #author {
@@ -69,26 +99,26 @@
             color: #e94560;
             margin-bottom: 30px;
             letter-spacing: 1px;
-            transition: opacity 0.5s ease;
+            transition: all 0.5s ease;
         }
 
         button {
             background: #e94560;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 15px 35px;
             font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
             text-transform: uppercase;
-            outline: none;
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
         }
 
         button:hover {
             background: #ff2e63;
-            box-shadow: 0 0 20px rgba(233, 69, 96, 0.6);
+            box-shadow: 0 0 25px rgba(233, 69, 96, 0.6);
             transform: scale(1.05);
         }
 
@@ -99,6 +129,9 @@
 </head>
 <body>
 
+    <!-- නිවි නිවි පත්තුවෙන Title එක -->
+    <h1 class="main-title">Daily Spark</h1>
+
     <div class="container">
         <div class="quote-box">
             <i class="fas fa-quote-left quote-icon"></i>
@@ -107,38 +140,19 @@
                 <span id="author">- සසංකර</span>
             </div>
             <div class="button-area">
-                <button id="new-quote">තව එකක් බලමු</button>
+                <button id="new-quote">අලුත් බලාපොරොත්තුවක්</button>
             </div>
         </div>
     </div>
 
     <script>
-        // JavaScript කොටස මෙතන තියෙන්නේ
         const quotes = [
-            {
-                text: "සාර්ථකත්වය යනු වැටෙන වාරයක් පාසා නැවත නැගී සිටීමයි.",
-                author: "වින්ස්ටන් චර්චිල්"
-            },
-            {
-                text: "ඔබේ සිහිනය වෙනුවෙන් අද දවසේ යමක් කරන්න.",
-                author: "ස්ටීව් ජොබ්ස්"
-            },
-            {
-                text: "අසීරු මාවත් සැමවිටම සුන්දර ගමනාන්ත කරා ඔබව රැගෙන යයි.",
-                author: "සිග් සිග්ලර්"
-            },
-            {
-                text: "අන් අය ඔබට කළ නොහැකි යැයි පවසන දේ කර පෙන්වීම තරම් සතුටක් තවත් නැත.",
-                author: "වෝල්ටර් බේජ්හොට්"
-            },
-            {
-                text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.",
-                author: "අල්බර්ට් අයින්ස්ටයින්"
-            },
-            {
-                text: "ඔබට අවසානයේදී ලැබෙන දේ තීරණය වන්නේ ඔබ අද දින කරන කැපවීම මතයි.",
-                author: "මෝටිවේෂන් සිංහල"
-            }
+            { text: "සාර්ථකත්වය යනු වැටෙන වාරයක් පාසා නැවත නැගී සිටීමයි.", author: "වින්ස්ටන් චර්චිල්" },
+            { text: "ඔබේ සිහිනය වෙනුවෙන් අද දවසේ යමක් කරන්න.", author: "ස්ටීව් ජොබ්ස්" },
+            { text: "අසීරු මාවත් සැමවිටම සුන්දර ගමනාන්ත කරා ඔබව රැගෙන යයි.", author: "සිග් සිග්ලර්" },
+            { text: "අන් අය ඔබට කළ නොහැකි යැයි පවසන දේ කර පෙන්වීම තරම් සතුටක් තවත් නැත.", author: "වෝල්ටර් බේජ්හොට්" },
+            { text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.", author: "අල්බර්ට් අයින්ස්ටයින්" },
+            { text: "ජයග්‍රහණය යනු පැරදීමට බිය නොවීමයි.", author: "මෝටිවේෂන් සිංහල" }
         ];
 
         const quoteText = document.getElementById("quote");
@@ -146,8 +160,9 @@
         const btn = document.getElementById("new-quote");
 
         btn.addEventListener("click", () => {
-            // Animation එකක් පෙන්වන්න opacity අඩු කරනවා
+            // Quote එක මාරු වෙද්දී සුමටව වෙන්න opacity සහ scale වෙනස් කරනවා
             quoteText.style.opacity = 0;
+            quoteText.style.transform = "scale(0.9)";
             authorText.style.opacity = 0;
 
             setTimeout(() => {
@@ -155,8 +170,8 @@
                 quoteText.innerText = `"${quotes[randomIndex].text}"`;
                 authorText.innerText = `- ${quotes[randomIndex].author}`;
                 
-                // නැවත පෙන්වනවා
                 quoteText.style.opacity = 1;
+                quoteText.style.transform = "scale(1)";
                 authorText.style.opacity = 1;
             }, 400);
         });
