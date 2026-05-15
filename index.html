@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Spark | Motivation Generator</title>
     
-    <!-- External Font Awesome for icons -->
+    <!-- External Resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         * {
@@ -19,7 +20,7 @@
         body {
             height: 100vh;
             display: flex;
-            flex-direction: column; /* Title එක උඩින් තියන්න */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: radial-gradient(circle, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -27,38 +28,28 @@
             overflow: hidden;
         }
 
-        /* නිවි නිවි පත්තුවෙන Title එක */
         .main-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 5px;
             color: #fff;
             text-shadow: 0 0 10px #e94560;
-            animation: glow 2s ease-in-out infinite; /* Animation එක මෙතන */
+            animation: glow 2s ease-in-out infinite;
         }
 
         @keyframes glow {
-            0%, 100% {
-                text-shadow: 0 0 5px #e94560, 0 0 10px #e94560, 0 0 20px #e94560;
-                opacity: 1;
-            }
-            50% {
-                text-shadow: 0 0 20px #e94560, 0 0 30px #ff2e63, 0 0 40px #ff2e63;
-                opacity: 0.7;
-            }
+            0%, 100% { text-shadow: 0 0 5px #e94560, 0 0 10px #e94560; opacity: 1; }
+            50% { text-shadow: 0 0 20px #e94560, 0 0 30px #ff2e63; opacity: 0.7; }
         }
 
-        .container {
-            width: 90%;
-            max-width: 500px;
-            animation: fadeIn 1.5s ease-out; /* මුලින්ම පේජ් එක එනකොට එන animation */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Capture කරන්න ඕන කොටස */
+        #capture-area {
+            padding: 20px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
         }
 
         .quote-box {
@@ -69,80 +60,89 @@
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .quote-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+            width: 100%;
+            max-width: 450px;
         }
 
         .quote-icon {
-            font-size: 40px;
+            font-size: 35px;
             color: #e94560;
             margin-bottom: 20px;
-            opacity: 0.8;
         }
 
         #quote {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 500;
             line-height: 1.4;
             margin-bottom: 15px;
-            min-height: 100px;
-            transition: all 0.5s ease;
+            min-height: 80px;
         }
 
         #author {
             display: block;
             font-style: italic;
             color: #e94560;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-            transition: all 0.5s ease;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
         }
 
         button {
-            background: #e94560;
-            color: white;
             border: none;
-            padding: 15px 35px;
-            font-size: 1rem;
+            padding: 12px 20px;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
             text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-next {
+            background: #e94560;
+            color: white;
+        }
+
+        .btn-download {
+            background: #28a745;
+            color: white;
         }
 
         button:hover {
-            background: #ff2e63;
-            box-shadow: 0 0 25px rgba(233, 69, 96, 0.6);
             transform: scale(1.05);
-        }
-
-        button:active {
-            transform: scale(0.95);
+            filter: brightness(1.2);
         }
     </style>
 </head>
 <body>
 
-    <!-- නිවි නිවි පත්තුවෙන Title එක -->
     <h1 class="main-title">Daily Spark</h1>
 
-    <div class="container">
+    <div id="capture-area">
         <div class="quote-box">
             <i class="fas fa-quote-left quote-icon"></i>
             <div class="text-area">
                 <p id="quote">"සාර්ථකත්වයේ රහස වන්නේ අරමුණක් ඇතිව වැඩ කිරීමයි."</p>
                 <span id="author">- සසංකර</span>
             </div>
-            <div class="button-area">
-                <button id="new-quote">අලුත් බලාපොරොත්තුවක්</button>
-            </div>
         </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-next" id="new-quote">
+            <i class="fas fa-sync-alt"></i> තව එකක්
+        </button>
+        <button class="btn-download" id="download-btn">
+            <i class="fas fa-download"></i> Save Image
+        </button>
     </div>
 
     <script>
@@ -150,30 +150,38 @@
             { text: "සාර්ථකත්වය යනු වැටෙන වාරයක් පාසා නැවත නැගී සිටීමයි.", author: "වින්ස්ටන් චර්චිල්" },
             { text: "ඔබේ සිහිනය වෙනුවෙන් අද දවසේ යමක් කරන්න.", author: "ස්ටීව් ජොබ්ස්" },
             { text: "අසීරු මාවත් සැමවිටම සුන්දර ගමනාන්ත කරා ඔබව රැගෙන යයි.", author: "සිග් සිග්ලර්" },
-            { text: "අන් අය ඔබට කළ නොහැකි යැයි පවසන දේ කර පෙන්වීම තරම් සතුටක් තවත් නැත.", author: "වෝල්ටර් බේජ්හොට්" },
-            { text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.", author: "අල්බර්ට් අයින්ස්ටයින්" },
-            { text: "ජයග්‍රහණය යනු පැරදීමට බිය නොවීමයි.", author: "මෝටිවේෂන් සිංහල" }
+            { text: "වෙනසක් වීමට අවශ්‍ය නම්, වෙනස් විදිහට සිතන්න පටන් ගන්න.", author: "අල්බර්ට් අයින්ස්ටයින්" }
         ];
 
         const quoteText = document.getElementById("quote");
         const authorText = document.getElementById("author");
-        const btn = document.getElementById("new-quote");
+        const btnNext = document.getElementById("new-quote");
+        const btnDownload = document.getElementById("download-btn");
 
-        btn.addEventListener("click", () => {
-            // Quote එක මාරු වෙද්දී සුමටව වෙන්න opacity සහ scale වෙනස් කරනවා
+        // නිව් Quote එකක් ගැනීම
+        btnNext.addEventListener("click", () => {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
             quoteText.style.opacity = 0;
-            quoteText.style.transform = "scale(0.9)";
-            authorText.style.opacity = 0;
-
             setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * quotes.length);
                 quoteText.innerText = `"${quotes[randomIndex].text}"`;
                 authorText.innerText = `- ${quotes[randomIndex].author}`;
-                
                 quoteText.style.opacity = 1;
-                quoteText.style.transform = "scale(1)";
-                authorText.style.opacity = 1;
-            }, 400);
+            }, 300);
+        });
+
+        // Screenshot එකක් ලෙස Download කිරීම
+        btnDownload.addEventListener("click", () => {
+            const element = document.getElementById("capture-area");
+            
+            html2canvas(element, {
+                backgroundColor: null, // Transparent background
+                scale: 2 // Quality එක වැඩි කිරීමට
+            }).then(canvas => {
+                const link = document.createElement("a");
+                link.download = "motivation-quote.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
         });
     </script>
 </body>
